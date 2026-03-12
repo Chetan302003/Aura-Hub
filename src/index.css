@@ -1,0 +1,426 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Aura VTC Hub - Premium Dark Glassmorphism Design System
+   Theme: Neon green accents on deep black with vibrant multi-color accents
+   Optimized for Desktop (Tauri) and Mobile responsiveness
+*/
+
+@layer base {
+  :root {
+    /* Deep black background for premium feel */
+    --background: 220 20% 4%;
+    --foreground: 0 0% 95%;
+
+    --card: 220 20% 6%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 220 20% 8%;
+    --popover-foreground: 0 0% 95%;
+
+    /* Vibrant Neon Green Primary */
+    --primary: 145 90% 45%;
+    --primary-foreground: 0 0% 0%;
+
+    /* Dark slate secondary */
+    --secondary: 220 15% 12%;
+    --secondary-foreground: 0 0% 85%;
+
+    --muted: 220 15% 12%;
+    --muted-foreground: 220 10% 55%;
+
+    /* Cyan accent for variety */
+    --accent: 185 85% 45%;
+    --accent-foreground: 0 0% 0%;
+
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Warning/caution - amber */
+    --warning: 45 95% 55%;
+    --warning-foreground: 0 0% 5%;
+
+    /* Success - matches primary */
+    --success: 145 90% 45%;
+    --success-foreground: 0 0% 0%;
+
+    /* Info - blue */
+    --info: 210 90% 55%;
+    --info-foreground: 0 0% 100%;
+
+    --border: 220 15% 15%;
+    --input: 220 20% 10%;
+    --ring: 145 90% 45%;
+
+    --radius: 0.875rem;
+
+    /* Glass effect variables - refined */
+    --glass-bg: 220 20% 8%;
+    --glass-border: 145 60% 30%;
+    --glass-glow: 145 90% 45%;
+
+    /* Sidebar */
+    --sidebar-background: 220 20% 5%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 145 90% 45%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 220 15% 12%;
+    --sidebar-accent-foreground: 0 0% 90%;
+    --sidebar-border: 220 15% 15%;
+    --sidebar-ring: 145 90% 45%;
+
+    /* Colorful Chart Palette */
+    --chart-1: 145 85% 50%;  /* Green */
+    --chart-2: 200 90% 55%;  /* Blue */
+    --chart-3: 280 80% 60%;  /* Purple */
+    --chart-4: 45 95% 55%;   /* Gold */
+    --chart-5: 350 85% 60%;  /* Rose */
+    --chart-6: 175 80% 45%;  /* Teal */
+
+    /* Additional accent colors */
+    --cyan: 185 85% 50%;
+    --purple: 280 80% 55%;
+    --rose: 350 85% 55%;
+    --amber: 45 95% 55%;
+    --teal: 175 80% 45%;
+    --blue: 210 90% 55%;
+
+    /* Brightness control */
+    --brightness: 1;
+  }
+
+  .dark {
+    /* Same as root - dark is default */
+    --background: 220 20% 4%;
+    --foreground: 0 0% 95%;
+    --card: 220 20% 6%;
+    --card-foreground: 0 0% 95%;
+    --popover: 220 20% 8%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 145 90% 45%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 220 15% 12%;
+    --secondary-foreground: 0 0% 85%;
+    --muted: 220 15% 12%;
+    --muted-foreground: 220 10% 55%;
+    --accent: 185 85% 45%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 15% 15%;
+    --input: 220 20% 10%;
+    --ring: 145 90% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    /* Smooth scrolling */
+    scroll-behavior: smooth;
+    /* Prevent iOS zoom on focus */
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    filter: brightness(var(--brightness, 1));
+    transition: filter 0.2s ease-out; /* Smooth brightness transition */
+    /* Prevent overscroll bounce and lock main scrolling */
+    overscroll-behavior: none;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    /* Safe area for mobile */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+
+  #root {
+    @apply w-full h-full;
+  }
+
+  /* Better touch targets for mobile */
+  button, a, [role="button"] {
+    min-height: 44px;
+    @apply touch-manipulation;
+  }
+
+  /* Small buttons exception */
+  .btn-sm, [data-size="sm"] {
+    min-height: 36px;
+  }
+}
+
+@layer components {
+  /* Premium Glassmorphism card - iPhone style */
+  .glass-card {
+    @apply relative overflow-hidden rounded-2xl;
+    background: linear-gradient(
+      145deg,
+      hsl(var(--glass-bg) / 0.85) 0%,
+      hsl(var(--glass-bg) / 0.6) 100%
+    );
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid hsl(var(--border) / 0.6);
+    box-shadow: 
+      0 4px 30px hsl(0 0% 0% / 0.3),
+      0 0 1px hsl(var(--glass-glow) / 0.15),
+      inset 0 1px 0 hsl(0 0% 100% / 0.03);
+  }
+
+  /* Subtle inner glow on hover */
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300;
+  }
+
+  .glass-card-hover:hover {
+    border-color: hsl(var(--glass-border) / 0.5);
+    box-shadow: 
+      0 8px 40px hsl(0 0% 0% / 0.4),
+      0 0 30px hsl(var(--glass-glow) / 0.08),
+      inset 0 1px 0 hsl(0 0% 100% / 0.05);
+    transform: translateY(-2px);
+  }
+
+  /* Neon border effect */
+  .glass-card-neon {
+    @apply glass-card;
+    border: 1px solid hsl(var(--glass-border) / 0.4);
+    box-shadow: 
+      0 4px 30px hsl(0 0% 0% / 0.3),
+      0 0 20px hsl(var(--glass-glow) / 0.1),
+      inset 0 0 20px hsl(var(--glass-glow) / 0.03);
+  }
+
+  /* Button glow effect */
+  .neon-glow {
+    @apply transition-all duration-300;
+    box-shadow: 
+      0 0 8px hsl(var(--primary) / 0.4),
+      0 0 20px hsl(var(--primary) / 0.15);
+  }
+
+  .neon-glow:hover {
+    box-shadow: 
+      0 0 12px hsl(var(--primary) / 0.5),
+      0 0 30px hsl(var(--primary) / 0.25);
+    transform: translateY(-1px);
+  }
+
+  .neon-glow:active {
+    transform: translateY(0);
+    box-shadow: 
+      0 0 6px hsl(var(--primary) / 0.4),
+      0 0 15px hsl(var(--primary) / 0.2);
+  }
+
+  /* Text glow */
+  .neon-text {
+    text-shadow: 
+      0 0 10px hsl(var(--primary) / 0.5),
+      0 0 30px hsl(var(--primary) / 0.3);
+  }
+
+  /* Subtle pulse */
+  .neon-pulse {
+    animation: neon-pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes neon-pulse {
+    0%, 100% {
+      box-shadow: 
+        0 0 4px hsl(var(--primary) / 0.3),
+        0 0 15px hsl(var(--primary) / 0.1);
+    }
+    50% {
+      box-shadow: 
+        0 0 8px hsl(var(--primary) / 0.4),
+        0 0 25px hsl(var(--primary) / 0.2);
+    }
+  }
+
+  /* Glass input styling */
+  .glass-input {
+    @apply bg-secondary/80 border-border/60 rounded-xl transition-all duration-200;
+    backdrop-filter: blur(10px);
+  }
+
+  .glass-input:focus {
+    @apply border-primary/50 ring-2 ring-primary/20 outline-none;
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.1);
+  }
+
+  /* Stat card variant */
+  .stat-card {
+    @apply glass-card p-5 sm:p-6;
+  }
+
+  /* Colored stat cards */
+  .stat-card-cyan {
+    @apply stat-card;
+    border-color: hsl(var(--cyan) / 0.3);
+    box-shadow: 
+      0 4px 30px hsl(0 0% 0% / 0.3),
+      0 0 15px hsl(var(--cyan) / 0.08);
+  }
+
+  .stat-card-purple {
+    @apply stat-card;
+    border-color: hsl(var(--purple) / 0.3);
+    box-shadow: 
+      0 4px 30px hsl(0 0% 0% / 0.3),
+      0 0 15px hsl(var(--purple) / 0.08);
+  }
+
+  .stat-card-amber {
+    @apply stat-card;
+    border-color: hsl(var(--amber) / 0.3);
+    box-shadow: 
+      0 4px 30px hsl(0 0% 0% / 0.3),
+      0 0 15px hsl(var(--amber) / 0.08);
+  }
+
+  .stat-card-rose {
+    @apply stat-card;
+    border-color: hsl(var(--rose) / 0.3);
+    box-shadow: 
+      0 4px 30px hsl(0 0% 0% / 0.3),
+      0 0 15px hsl(var(--rose) / 0.08);
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.5);
+  }
+
+  /* Hide scrollbar on mobile for cleaner look */
+  @media (max-width: 768px) {
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    
+    * {
+      scrollbar-width: none;
+    }
+  }
+}
+
+@layer utilities {
+  /* Gradient text - multi-color */
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      135deg,
+      hsl(var(--primary)) 0%,
+      hsl(var(--cyan)) 50%,
+      hsl(var(--primary)) 100%
+    );
+  }
+
+  .gradient-text-warm {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      135deg,
+      hsl(var(--amber)) 0%,
+      hsl(var(--rose)) 100%
+    );
+  }
+
+  .gradient-text-cool {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      135deg,
+      hsl(var(--cyan)) 0%,
+      hsl(var(--purple)) 100%
+    );
+  }
+
+  /* Colorful icon backgrounds */
+  .icon-bg-green {
+    @apply bg-primary/15 text-primary;
+  }
+
+  .icon-bg-cyan {
+    background: hsl(var(--cyan) / 0.15);
+    color: hsl(var(--cyan));
+  }
+
+  .icon-bg-purple {
+    background: hsl(var(--purple) / 0.15);
+    color: hsl(var(--purple));
+  }
+
+  .icon-bg-amber {
+    background: hsl(var(--amber) / 0.15);
+    color: hsl(var(--amber));
+  }
+
+  .icon-bg-rose {
+    background: hsl(var(--rose) / 0.15);
+    color: hsl(var(--rose));
+  }
+
+  .icon-bg-blue {
+    background: hsl(var(--blue) / 0.15);
+    color: hsl(var(--blue));
+  }
+
+  /* Fade in animation */
+  .fade-in-up {
+    animation: fade-in-up 0.4s ease-out forwards;
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Staggered animation delays */
+  .delay-75 { animation-delay: 75ms; }
+  .delay-150 { animation-delay: 150ms; }
+  .delay-225 { animation-delay: 225ms; }
+  .delay-300 { animation-delay: 300ms; }
+
+  /* Safe area utilities for mobile */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  /* Mobile-first responsive containers */
+  .container-mobile {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+  body.maximized {
+  padding: 4px; /* Sometimes needed to prevent content from cutting off on Windows */
+}
+}

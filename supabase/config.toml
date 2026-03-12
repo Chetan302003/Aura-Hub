@@ -1,0 +1,16 @@
+project_id = "kmaiqezwmmpmprpektvc"
+
+[functions.reset-password]
+verify_jwt = false
+
+[functions.tmp-player]
+verify_jwt = false
+
+[functions.tmp-events]
+verify_jwt = false
+
+[functions.tmp-servers]
+verify_jwt = false
+
+[functions.manage-user]
+verify_jwt = false

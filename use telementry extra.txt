@@ -1,0 +1,321 @@
+// export function useTelemetry(config: TelemetryConfig = {}) {
+
+//   const mergedConfig = { ...defaultConfig, ...config };
+
+
+
+//   const [data, setData] = useState<TelemetryData>(defaultTelemetry);
+
+//   const [connected, setConnected] = useState(false);
+
+//   const [error, setError] = useState<string | null>(null);
+
+//   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+
+//   // 1. ADD THE CONNECT FUNCTION (Missing from your code)
+
+//   const connect = useCallback(async () => {
+
+//     if (!isTauri()) {
+
+//       setError("Not running in Tauri environment.");
+
+//       return;
+
+//     }
+
+//     try {
+
+//       // This tells your Rust backend to start the telemetry loop
+
+//       await invoke('get_telemetry_data');
+
+//       setConnected(true);
+
+//       setError(null);
+
+//     } catch (err) {
+
+//       setError("Failed to connect to telemetry service.");
+
+//       console.error(err);
+
+//     }
+
+//   }, []);
+
+
+
+//   // 2. ADD THE DISCONNECT FUNCTION (Missing from your code)
+
+//   const disconnect = useCallback(async () => {
+
+//     setConnected(false);
+
+//     // You can add a Rust 'stop' command here if needed
+
+//   }, []);
+
+//   // Parse telemetry response to our format
+
+//   const parseTelemetryResponse = useCallback((raw: any): TelemetryData => {
+
+//     // Handle different telemetry server formats
+
+//     // This parser handles scs-sdk-plugin and trucksim-telemetry-server formats
+
+//     try {
+
+//       const game: TelemetryGame = {
+
+//         connected: raw.game?.connected ?? raw.connected ?? true,
+
+//         paused: raw.game?.paused ?? raw.paused ?? false,
+
+//         time: raw.game?.time ?? raw.time ?? '',
+
+//         timeScale: raw.game?.timeScale ?? raw.timeScale ?? 1,
+
+//         nextRestStop: raw.game?.nextRestStop ?? raw.nextRestStop ?? 0,
+
+//         version: raw.game?.version ?? raw.version ?? '',
+
+//         game: (raw.game?.game ?? raw.game_name ?? 'unknown') as 'ets2' | 'ats' | 'unknown',
+
+//         telemetryVersion: raw.game?.telemetryVersion ?? raw.sdk_version ?? '',
+
+//       };
+
+
+
+//       const truck: TelemetryTruck = {
+
+//         id: raw.truck?.id ?? raw.truck_id ?? '',
+
+//         make: raw.truck?.make ?? raw.truck_make ?? '',
+
+//         model: raw.truck?.model ?? raw.truck_model ?? '',
+
+//         speed: Math.abs(raw.truck?.speed ?? raw.speed ?? 0) * 3.6, // m/s to km/h
+
+//         speedLimit: (raw.truck?.speedLimit ?? raw.speed_limit ?? 0) * 3.6,
+
+//         cruiseControl: (raw.truck?.cruiseControl ?? raw.cruise_control ?? 0) * 3.6,
+
+//         cruiseControlOn: raw.truck?.cruiseControlOn ?? raw.cruise_control_on ?? false,
+
+//         fuel: raw.truck?.fuel ?? raw.fuel ?? 0,
+
+//         fuelCapacity: raw.truck?.fuelCapacity ?? raw.fuel_capacity ?? 0,
+
+//         fuelAvgConsumption: raw.truck?.fuelAvgConsumption ?? raw.fuel_avg_consumption ?? 0,
+
+//         odometer: raw.truck?.odometer ?? raw.odometer ?? 0,
+
+//         engineRpm: raw.truck?.engineRpm ?? raw.engine_rpm ?? 0,
+
+//         engineRpmMax: raw.truck?.engineRpmMax ?? raw.engine_rpm_max ?? 0,
+
+//         gear: raw.truck?.gear ?? raw.gear ?? 0,
+
+//         gearForward: raw.truck?.gearForward ?? raw.gear_forward ?? 0,
+
+//         gearReverse: raw.truck?.gearReverse ?? raw.gear_reverse ?? 0,
+
+//         engineOn: raw.truck?.engineOn ?? raw.engine_on ?? false,
+
+//         electricOn: raw.truck?.electricOn ?? raw.electric_on ?? false,
+
+//         wipersOn: raw.truck?.wipersOn ?? raw.wipers_on ?? false,
+
+//         lightsBeam: {
+
+//           low: raw.truck?.lightsBeam?.low ?? raw.lights_beam_low ?? false,
+
+//           high: raw.truck?.lightsBeam?.high ?? raw.lights_beam_high ?? false,
+
+//         },
+
+//         blinker: {
+
+//           left: raw.truck?.blinker?.left ?? raw.blinker_left ?? false,
+
+//           right: raw.truck?.blinker?.right ?? raw.blinker_right ?? false,
+
+//         },
+
+//         damage: {
+
+//           engine: raw.truck?.damage?.engine ?? raw.damage_engine ?? 0,
+
+//           transmission: raw.truck?.damage?.transmission ?? raw.damage_transmission ?? 0,
+
+//           cabin: raw.truck?.damage?.cabin ?? raw.damage_cabin ?? 0,
+
+//           chassis: raw.truck?.damage?.chassis ?? raw.damage_chassis ?? 0,
+
+//           wheels: raw.truck?.damage?.wheels ?? raw.damage_wheels ?? 0,
+
+//           total: raw.truck?.damage?.total ?? raw.damage_total ?? 0,
+
+//         },
+
+//       };
+
+
+
+//       const trailer: TelemetryTrailer = {
+
+//         attached: raw.trailer?.attached ?? raw.trailer_attached ?? false,
+
+//         id: raw.trailer?.id ?? raw.trailer_id ?? '',
+
+//         name: raw.trailer?.name ?? raw.trailer_name ?? '',
+
+//         mass: raw.trailer?.mass ?? raw.trailer_mass ?? 0,
+
+//         damage: raw.trailer?.damage ?? raw.trailer_damage ?? 0,
+
+//       };
+
+
+
+//       const job: TelemetryJob | null = raw.job ? {
+
+//         income: raw.job.income ?? 0,
+
+//         deadlineTime: raw.job.deadlineTime ?? raw.job.deadline_time ?? '',
+
+//         remainingTime: raw.job.remainingTime ?? raw.job.remaining_time ?? 0,
+
+//         sourceCity: raw.job.sourceCity ?? raw.job.source_city ?? '',
+
+//         sourceCompany: raw.job.sourceCompany ?? raw.job.source_company ?? '',
+
+//         destinationCity: raw.job.destinationCity ?? raw.job.destination_city ?? '',
+
+//         destinationCompany: raw.job.destinationCompany ?? raw.job.destination_company ?? '',
+
+//         cargo: typeof raw.job.cargo === 'object' ? raw.job.cargo.name : (raw.job.cargo ?? ''),
+
+//         cargoMass: typeof raw.job.cargoMass === 'object'? raw.job.cargo_mass : (raw.job.cargo ?? 0 ),
+
+//         cargoDamage: raw.job.cargoDamage ?? raw.job.cargo_damage ?? 0,
+
+//         isSpecial: raw.job.isSpecial ?? raw.job.is_special ?? false,
+
+//         market: raw.job.market ?? '',
+
+//       } : null;
+
+
+
+//       const navigation: TelemetryNavigation = {
+
+//         estimatedTime: raw.navigation?.estimatedTime ?? raw.navigation_time ?? 0,
+
+//         estimatedDistance: raw.navigation?.estimatedDistance ?? raw.navigation_distance ?? 0,
+
+//         speedLimit: (raw.navigation?.speedLimit ?? raw.navigation_speed_limit ?? 0) * 3.6,
+
+//       };
+
+
+
+//       return { game, truck, trailer, job, navigation };
+
+//     } catch (err) {
+
+//       console.error('Error parsing telemetry:', err);
+
+//       return defaultTelemetry;
+
+//     }
+
+//   }, []);
+
+//   // tauri polling connections
+
+//   useEffect(() => {
+
+//     if (!isTauri()) return;
+
+
+
+//     const poll = async () => {
+
+//       try {
+
+//         // 1. Fetch from Rust
+
+//         const rawJson = await invoke<string>('get_telemetry_data');
+//         console.log("--- AURA RAW DATA ---");
+//         const rawObj = JSON.parse(rawJson);
+
+
+
+//         // 2. Use the parser above to format the data
+
+//         const parsed = parseTelemetryResponse(rawObj);
+
+
+
+//         setData(parsed);
+
+//         setConnected(true);
+
+//         setError(null);
+
+//         setLastUpdate(new Date());
+
+//       } catch (err) {
+
+//         setConnected(false);
+
+//       }
+
+//     };
+
+
+
+//     poll(); // Initial call
+
+//     const interval = setInterval(poll, 100); // 10 times per second
+
+
+
+//     return () => clearInterval(interval);
+
+//   }, [parseTelemetryResponse]);
+
+
+
+//   return {
+
+//     data,
+
+//     connected,
+
+//     error,
+
+//     lastUpdate,
+
+//     isJobActive: !!data.job,
+
+//     isGameRunning: data.game.connected && !data.game.paused,
+
+//     connect,     // <--- Must be here
+
+//     disconnect,
+
+//   };
+
+// }
+
+/**
+
+ * Hook for auto-logging jobs based on telemetry
+
+ * Detects job completion and prepares data for logging
+
+ */

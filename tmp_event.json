@@ -1,0 +1,49 @@
+{
+  "id": 30251,
+  "event_type": {
+    "key": "convoy",
+    "name": "Convoy"
+  },
+  "name": "Super Event | Easter Eggs Hunt",
+  "slug": "30251-super-event|-easter-eggs-hunt",
+  "game": "ETS2",
+  "server": {
+    "id": 25,
+    "name": "Event Server"
+  },
+  "language": "Chinese (Simplified)",
+  "departure": {
+    "location": "Any City Within The Area Of Play",
+    "city": "Other"
+  },
+  "arrive": {
+    "location": "End Anywhere In A Safe Location",
+    "city": "Other"
+  },
+  "meetup_at": "2026-04-17 11:30:00",
+  "start_at": "2026-04-17 12:30:00",
+  "banner": "https://static.truckersmp.com/images/event/cover/30251.1767274710.jpg",
+  "map": "https://static.truckersmp.com/images/event/map/30251.1771399442.png",
+  "description": "## 复活节彩蛋狩猎\r\n\r\n今年，一些调皮的兔子带着我们的复活节彩蛋逃跑了，并将它们藏在没人能找到的地方。现在，我们需要猎蛋人来帮助我们，以免为时已晚！\r\n\r\n我们需要您的帮助，在 4 月 17 日 20:30 和 22:30 期间前来，并尝试找到所有的蛋！\r\n\r\n这不仅仅是一场游戏 —— 我们的复活节庆祝活动取决于它！你会接受挑战并在兔子逃脱之前寻找丢失的鸡蛋吗？加入狩猎，让我们把鸡蛋带回它们所属的地方。\r\n\r\n根据一些线索，我们已经知道了兔子所在的大致区域，彩蛋都还在那里！有**7个**彩蛋可供发现：紫色、绿色、蓝色、黄色、橙色、深红色和红色鸡蛋，以及**2个**滚动的彩蛋。\r\n\r\n活动将于 4 月 17 日 20:30 开始，您必须在22:30找到所有鸡蛋！\r\n\r\n**无需任何DLC！**\r\n\r\n\r\n\r\n-----\r\n\r\n\r\n\r\n## 怎么玩？\r\n\r\n**9个**鸡蛋被困在我们给出的区域中，如果您是最快找到所有鸡蛋的人，您将获得由**Super CC**提供的特别奖品！\r\n\r\n所有彩蛋都将由我们的活动团队员工代表，他们的前缀与他们所托运的彩蛋相匹配，如：“SE | Rolling Egg” （此前缀中文翻译：\"SE | 滚动蛋“）\r\n\r\n***请注意，在参与本次活动时，不要使用任何TPC工具，这可能会导致您的成绩作废！***\r\n\r\n\r\n\r\n-----\r\n\r\n\r\n\r\n## 活动是如何进行的？\r\n\r\n在服务器开启时，选择我们的活动服务器，服务器将不会启用碰撞，这也意味着，所有道路规则将不适用。\r\n\r\n在我们列出的区域里，您可以从任意一个城市开始，也不需要挂车，因为您不需要它们，速度才是您制胜的关键！\r\n\r\n当您找到了一个鸡蛋时，请打开您的TAB，用F12截图，以证明您找到了它，如果不符合要求将视为无效的提交！\r\n\r\n\r\n\r\n-----\r\n\r\n\r\n\r\n## 奖品！\r\n\r\n## - 第一名的VTC：75元红包\r\n## - 第二名的VTC：50元红包\r\n## - 第三名的VTC：25元红包\r\n\r\n\r\n\r\n-----\r\n\r\n## Notes: If you are an international player whose native language is not Chinese, then you will not be able to compete for rankings because the form we provide does not have the Chinese communication software and cannot be submitted.\r\n\r\n-----\r\n\r\n\r\n\r\n## 提交处：\r\n[点击我！](https://truckersmp.com/events/30251-super-event%7C-easter-eggs-hunt)",
+  "rule": "Event Rules for Participants:\r\n* The Event Staff are recognized as: ***\"SE | Event Manager\" \"SE | Event Assistant\" \"SE | Support\" “SE | Purple Egg” “SE | Green Egg\" \"SE | Blue Egg\" \"SE | Yellow Egg\" \"SE | Orange Egg\" ”SE | Dark Red Egg\" \"SE | Red Egg\" \"SE | Rolling Egg\" \"SE | TMP Staff\"*** or similar.\r\n* Impersonating Event Staff using the aforementioned tags is forbidden.\r\n* Advertising is prohibited. (Except Event Staff)\r\n* Free roaming on the server is prohibited. \r\n* Cars and Buses are prohibited except for event staff showing a clear tag.\r\n* Double trailers, Triple trailers, HCT trailers and Heavy Haul configurations are prohibited. (Except Event Staff)\r\n* Participants should park in the designated area provided in the event information section before the event.\r\n* All other TruckersMP rules apply.\r\n\r\nEvent Rules for Event Staff:\r\n* Event Staff can block junctions and roads approaching junctions in order to direct the convoy.\r\n* Event Staff can park out of bounds. Providing this is on the ground and not on top of buildings or other inappropriate places deemed unsuitable by TruckersMP Staff.\r\n* Event Staff overtaking the convoy cannot be performed by more than 2 members at a time.\r\n* Event Staff can drive the incorrect way where roads have a central reservation barrier ONLY. In accordance with the rule above.\r\n* All other TruckersMP rules apply.",
+  "voice_link": "https://discord.gg/rQSwx5hhJG",
+  "external_link": null,
+  "featured": "",
+  "vtc": {
+    "id": 0,
+    "name": null
+  },
+  "user": {
+    "id": 1509726,
+    "username": "Mysterious Phoenix"
+  },
+  "attendances": {
+    "confirmed": 119,
+    "unsure": 0,
+    "vtcs": 21
+  },
+  "dlcs": [],
+  "url": "/events/30251-super-event|-easter-eggs-hunt",
+  "created_at": "2025-08-08 19:20:26",
+  "updated_at": "2026-02-21 23:32:31"
+}
