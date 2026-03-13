@@ -63,315 +63,168 @@ export interface TelemetryTruck {
     engine: number;
 
     transmission: number;
-
     cabin: number;
     chassis: number;
     wheels: number;
     total: number;
-
   };
-
+  // Finance fields
+  fines?: number;
+  tolls?: number;
+  repairs?: number;
 }
-
-
 
 export interface TelemetryTrailer {
-
   attached: boolean;
-
   id: string;
-
   name: string;
-
   mass: number;
-
   damage: number;
-
 }
-
-
 
 export interface TelemetryJob {
-
   income: number;
-
   deadlineTime: string;
-
   remainingTime: number;
-
   sourceCity: string;
-
   sourceCompany: string;
-
   destinationCity: string;
-
   destinationCompany: string;
-
   cargo: string | {
-
     name: string;
-
     mass: number;
-
     cargo_damage: number;
-
     id?: string;
-
   };
-
   cargoMass: number;
-
   cargoDamage: number;
-
   isSpecial: boolean;
-
   market: string;
-
 }
-
-
 
 export interface TelemetryNavigation {
-
   estimatedTime: number;
-
   estimatedDistance: number;
-
   speedLimit: number;
-
 }
-
-
 
 export interface TelemetryGame {
-
   connected: boolean;
-
   paused: boolean;
-
   time: string;
-
   timeScale: number;
-
   nextRestStop: number;
-
   version: string;
-
   game: 'ets2' | 'ats' | 'unknown';
-
   telemetryVersion: string;
-
 }
-
-
 
 export interface TelemetryData {
-
   game: TelemetryGame;
-
   truck: TelemetryTruck;
-
   trailer: TelemetryTrailer;
-
   job: TelemetryJob | null;
-
   navigation: TelemetryNavigation;
-
 }
-
-
 
 export interface TelemetryConfig {
-
   /** WebSocket URL for telemetry server (default: ws://localhost:25555) */
-
   wsUrl?: string;
-
   /** HTTP URL for telemetry server (default: http://localhost:25555) */
-
   httpUrl?: string;
-
   /** Polling interval in ms when using HTTP (default: 100) */
-
   pollingInterval?: number;
-
   /** Connection mode: 'websocket' | 'http' | 'auto' (default: 'auto') */
-
   mode?: 'websocket' | 'http' | 'auto';
-
   /** Enable auto-reconnect (default: true) */
-
   autoReconnect?: boolean;
-
   /** Reconnect delay in ms (default: 3000) */
-
   reconnectDelay?: number;
-
 }
 
-
-
 const defaultConfig: Required<TelemetryConfig> = {
-
   wsUrl: 'ws://localhost:25555',
-
   httpUrl: 'http://localhost:25555/api/ets2/telemetry',
-
   pollingInterval: 100,
-
   mode: 'auto',
-
   autoReconnect: true,
-
   reconnectDelay: 3000,
-
 };
 
-
-
 const defaultTelemetry: TelemetryData = {
-
   game: {
-
     connected: false,
-
     paused: false,
-
     time: '',
-
     timeScale: 1,
-
     nextRestStop: 0,
-
     version: '',
-
     game: 'unknown',
-
     telemetryVersion: '',
-
   },
-
   truck: {
-
     id: '',
-
     make: '',
-
     model: '',
-
     speed: 0,
-
     speedLimit: 0,
-
     cruiseControl: 0,
-
     cruiseControlOn: false,
-
     fuel: 0,
-
     fuelCapacity: 0,
-
     fuelAvgConsumption: 0,
-
     odometer: 0,
-
     engineRpm: 0,
-
     engineRpmMax: 0,
-
     gear: 0,
-
     gearForward: 0,
-
     gearReverse: 0,
-
     engineOn: false,
     electricOn: false,
     wipersOn: false,
     lightsBeam: { low: false, high: false },
     blinker: { left: false, right: false },
     damage: { engine: 0, transmission: 0, cabin: 0, chassis: 0, wheels: 0, total: 0 },
-
   },
-
   trailer: {
-
     attached: false,
-
     id: '',
-
     name: '',
-
     mass: 0,
-
     damage: 0,
-
   },
-
   job: null,
-
   navigation: {
-
     estimatedTime: 0,
-
     estimatedDistance: 0,
-
     speedLimit: 0,
-
   },
-
 };
 
-
-
 /**
-
  * Hook for reading ETS2/ATS telemetry data
-
  *
-
  * TAURI CONVERSION NOTES:
-
  * -----------------------
-
  * When converting to Tauri desktop app:
-
  *
-
  * 1. Replace WebSocket/HTTP with Tauri invoke:
-
  *    ```rust
-
  *    #[tauri::command]
-
  *    fn get_telemetry() -> Result<TelemetryData, String> {
-
  *      // Read from telemetry SDK or shared memory
-
  *    }
-
  *    ```
-
  *
-
  * 2. Use Tauri events for real-time updates:
-
  *    ```typescript
-
  *    import { listen } from '@tauri-apps/api/event';
-
  *    listen('telemetry-update', (event) => {
-
  *      setData(event.payload as TelemetryData);
-
  *    });
-
  *    ```
-
  *
-
  * 3. The hook interface stays the same - just swap the data source
-
  */
 // ... Keep your TelemetryTruck, TelemetryTrailer, TelemetryJob, etc. interfaces here ...
 
@@ -439,6 +292,10 @@ export function useTelemetry(config: TelemetryConfig = {}) {
           wheels: Number(raw.truck?.current?.damage?.wheels_avg || 0),
           total: Number(raw.truck?.current?.damage?.chassis || 0),
         },
+        // ADDED: Capture finance/expense data if available from the SDK version
+        fines: Number(raw.finances?.fines || 0),
+        tolls: Number(raw.finances?.tolls || 0),
+        repairs: Number(raw.finances?.repairs || 0),
       };
 
       // 2. TRAILER MAPPING (Using plural trailers[0])
@@ -567,6 +424,10 @@ export function useAutoJobLogger() {
     plannedDistance: number;
     isLogged?: boolean;
     jobId: string;
+    // New fields for cumulative tracking
+    fuelConsumedAccumulated: number;
+    expensesAccumulated: number;
+    lastTickFuel: number;
   } | null>(null);
 
   const [jobJustFinished, setJobJustFinished] = useState(false);
@@ -576,8 +437,6 @@ export function useAutoJobLogger() {
     const cargoName = typeof job.cargo === 'object' ? job.cargo.name : job.cargo;
     return `${cargoName}-${job.sourceCity}-${job.destinationCity}-${Math.round(plannedDistance)}`;
   }, []);
-
-
 
   // Persistence Keys
   const STORAGE_KEY_JOB = 'aura_last_active_job';
@@ -651,13 +510,13 @@ export function useAutoJobLogger() {
     if (connected && isJobActive && data.job && jobState === 'NO_JOB' && !jobStartData) {
       setJobState('JOB_DETECTED');
       setDetectionOdometer(data.truck.odometer);
-      console.log('Aura: Potential new job picked up. Waiting for 0.5km movement to confirm...');
+      console.log('Aura: Potential new job picked up. Waiting for 0.1km movement to confirm...');
     }
 
-    // 2.5 Job Start Confirmation (Distance moved > 0.5km)
+    // 2.5 Job Start Confirmation (Distance moved > 0.1km)
     if (connected && isJobActive && data.job && jobState === 'JOB_DETECTED' && detectionOdometer !== null) {
-      if (data.truck.odometer - detectionOdometer > 0.5) {
-        console.log('Aura: Job confirmed active (Driver moved 0.5km+). Starting tracking.');
+      if (data.truck.odometer - detectionOdometer > 0.1) {
+        console.log('Aura: Job confirmed active (Driver moved 0.1km+). Starting tracking.');
 
         const plannedDistance = data.navigation.estimatedDistance / 1000;
         const startOdometer = data.truck.odometer;
@@ -668,7 +527,10 @@ export function useAutoJobLogger() {
           startFuel: data.truck.fuel,
           plannedDistance,
           jobId,
-          isLogged: false
+          isLogged: false,
+          fuelConsumedAccumulated: 0,
+          expensesAccumulated: 0,
+          lastTickFuel: data.truck.fuel
         };
 
         setJobStartData(newStartData);
@@ -682,14 +544,41 @@ export function useAutoJobLogger() {
     }
 
     // 3. Keep Track of Latest Valid Data while Active
-    if (connected && isJobActive && data.job && jobState === 'JOB_ACTIVE') {
+    if (connected && isJobActive && data.job && jobState === 'JOB_ACTIVE' && jobStartData) {
+      // CUMULATIVE FUEL TRACKING
+      let fuelDelta = 0;
+      if (data.truck.fuel < jobStartData.lastTickFuel) {
+        fuelDelta = jobStartData.lastTickFuel - data.truck.fuel;
+      }
+
+      // EXPENSE TRACKING (Capturing increases in fines/tolls/repairs)
+      // Note: We use the delta to handle situations where multiple events happen in one tick
+      // but usually the SDK sums them. We'll track the delta of the 'fines', 'tolls', 'repairs' fields.
+      // However, most SDKs provide these as events or session totals. 
+      // We'll trust the delta for cumulative logging during the job.
+      let expenseDelta = 0;
+      const currentExpenses = (data.truck as any).fines + (data.truck as any).tolls + (data.truck as any).repairs;
+      const lastExpenses = (jobStartData as any).lastTickExpenses || 0;
+      
+      if (currentExpenses > lastExpenses) {
+        expenseDelta = currentExpenses - lastExpenses;
+      }
+
+      setJobStartData(prev => prev ? {
+        ...prev,
+        fuelConsumedAccumulated: prev.fuelConsumedAccumulated + fuelDelta,
+        expensesAccumulated: prev.expensesAccumulated + expenseDelta,
+        lastTickFuel: data.truck.fuel,
+        lastTickExpenses: currentExpenses
+      } : null);
+
       setPendingJob(data.job);
       setJobJustFinished(false);
     }
 
     // 4. Job End Detection (Job was Active, now NULL)
     if (connected && !isJobActive && data.job === null && jobState === 'JOB_ACTIVE') {
-      console.log('Aura: Job signal lost. Waiting 3 seconds to confirm completion...');
+      console.log('Aura: Job signal lost. Waiting 10 seconds to confirm completion (Persists through restarts)...');
       setJobState('JOB_FINISHED'); // Enter pending finish state
 
       if (stateTimerRef.current) clearTimeout(stateTimerRef.current);
@@ -719,7 +608,7 @@ export function useAutoJobLogger() {
           console.log('Aura: False alarm job end. Resuming track.');
           setJobState('JOB_ACTIVE');
         }
-      }, 3000); // 3 second end confirmation delay
+      }, 10000); // 10 second end confirmation delay
     }
 
     // 5. Cleanup stray starts
@@ -740,7 +629,7 @@ export function useAutoJobLogger() {
 
     // Use floating point for precision before rounding at the end
     const distanceKm = data.truck.odometer - jobStartData.startOdometer;
-    const fuelConsumed = jobStartData.startFuel - data.truck.fuel;
+    const fuelConsumed = jobStartData.fuelConsumedAccumulated;
 
     // Determine status (80% threshold for delivered vs cancelled)
     const plannedDistance = jobStartData.plannedDistance;
@@ -760,6 +649,7 @@ export function useAutoJobLogger() {
       fuel_consumed: Math.round(fuelConsumed),
       income: finalIncome,
       damage_percent: Number((activeJob.cargoDamage * 100).toFixed(2)),
+      expenses: Math.round(jobStartData.expensesAccumulated),
     };
   }, [data.job, pendingJob, data.truck, jobStartData]);
 

@@ -301,6 +301,7 @@ export default function Telemetry() {
         income: jobData.income,
         damage_percent: jobData.damage_percent,
         status: jobData.status,
+        expenses: jobData.expenses, 
         delivery_date: new Date().toISOString(),
         notes: `Auto-logged from Aura Hub`,
       }, { onConflict: "user_id,job_id" });

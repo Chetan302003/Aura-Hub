@@ -55,16 +55,33 @@ export default function MyStats() {
     }).format(num);
   };
 
-  // Transform recent jobs for chart
-  const chartData = recentJobs
-    .slice(0, 7)
-    .reverse()
-    .map((job: any) => ({
-      date: format(new Date(job.delivery_date), 'MMM dd'),
-      distance: Number(job.distance_km) || 0,
-      income: Number(job.income) || 0,
-      damage: Number(job.damage_percent) || 0,
-    }));
+  // Transform recent jobs for chart - Group by date
+  const chartData = Object.values(
+    recentJobs.reduce((acc: any, job: any) => {
+      const dateKey = format(new Date(job.delivery_date), 'MMM dd');
+      if (!acc[dateKey]) {
+        acc[dateKey] = {
+          date: dateKey,
+          distance: 0,
+          income: 0,
+          damage: 0,
+          count: 0,
+          rawDate: new Date(job.delivery_date)
+        };
+      }
+      acc[dateKey].distance += Number(job.distance_km) || 0;
+      acc[dateKey].income += Number(job.income) || 0;
+      acc[dateKey].damage += Number(job.damage_percent) || 0;
+      acc[dateKey].count += 1;
+      return acc;
+    }, {})
+  )
+  .sort((a: any, b: any) => a.rawDate.getTime() - b.rawDate.getTime())
+  .slice(-7)
+  .map((day: any) => ({
+    ...day,
+    damage: Number((day.damage / day.count).toFixed(1)) // Average damage for the day
+  }));
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
